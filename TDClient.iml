@@ -206,5 +206,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.sisu:org.eclipse.sisu.inject:0.0.0.M5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.plexus:plexus-compiler-javac:2.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.plexus:plexus-compiler-api:2.3" level="project" />
+    <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
   </component>
 </module>

@@ -1,4 +1,4 @@
-package quant;
+package quant.http.client;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -10,36 +10,36 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import quant.http.client.TDClient;
 import quant.http.config.TDClientConfig;
 import quant.http.requests.RequestBuilder;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
 /**
- * Created by dev on 12/21/14.
+ * Created by dev on 12/22/14.
  */
 @RunWith(Arquillian.class)
-public class TestRunner {
+public class TDClientTest {
     @Deployment
     public static Archive<?> createDeployment() {
         File[] files = Maven.resolver().loadPomFromFile("pom.xml").
             importRuntimeDependencies().resolve().withoutTransitivity().asFile();
 
-        WebArchive war = ShrinkWrap.create(WebArchive.class, "TestME.war")
-            .addClasses(TDClientConfig.class, TDClient.class, RequestBuilder.class)
+        return ShrinkWrap.create(WebArchive.class, "TDClientTest.war")
+            .addPackages(true, "quant")
             .addAsLibraries(files)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-
-        return war;
     }
 
     @Inject
-    TDClientConfig config;
+    TDClient client;
 
     @Test
-    public void config_retrieve_env_vars () {
-        Assert.fail("Not implemented with test values");
+    public void client () {
+        //Assert.fail("Not implemented");
     }
 }
