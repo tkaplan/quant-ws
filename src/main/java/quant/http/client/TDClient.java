@@ -9,10 +9,14 @@ import org.apache.http.nio.client.HttpAsyncClient;
 import quant.http.config.TDClientConfig;
 import quant.http.dao.StreamServerDao;
 import quant.http.requests.RequestBuilder;
+import quant.http.requests.StreamRequestBuilder;
+import quant.http.requests.XMLRequestBuilder;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.enterprise.concurrent.ManagedExecutorService;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -31,38 +35,39 @@ import java.util.concurrent.ExecutionException;
 public class TDClient {
 
     private CloseableHttpAsyncClient client;
-    private StreamServerDao dao;
     private TDClientConfig config;
     private RequestBuilder builder;
+    private XMLRequestBuilder xmlRequestBuilder;
+    private StreamRequestBuilder streamRequestBuilder;
+    private StreamServerDao dao;
+
+    @Resource(name = "DefaultManagedExecutorService")
+    ManagedExecutorService executor;
 
     @PostConstruct
     public void startup() throws IOException, URISyntaxException {
         config = new TDClientConfig();
-        this.builder = new RequestBuilder(config);
+        builder = new RequestBuilder(config);
         CloseableHttpClient client = HttpClients.createDefault();
         // Authenticate logs us in and grabs
         // our stream info
-        this.dao = builder.authenticate(client);
+        dao = builder.authenticate(client);
+        this.xmlRequestBuilder = new XMLRequestBuilder(config, client, dao);
+        this.streamRequestBuilder = new StreamRequestBuilder(config, client, dao);
     }
 
-    /**
-     * This bean will:
-     *  1) authenticate
-     *  2) make requests on our behalf
-     *  3) log
-     *  4) return nio streams
-     *  5) manage event listeners
-     *  6) parse
-     *  7) persist via hibernate.
-     */
+    public XMLRequestBuilder XMLRequestBuilder() {
+        return xmlRequestBuilder;
+    }
+
+    public StreamRequestBuilder StreamRequestBuilder() {
+        return streamRequestBuilder;
+    }
 
     // Refresh our stream info
     public synchronized void setStreamDao(StreamServerDao dao) {
         this.dao = dao;
     }
 
-    // We now want to begin processing all of our requests
-    public void getStockQuote() {
 
-    }
 }
