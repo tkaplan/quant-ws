@@ -37,7 +37,17 @@ public class XMLRequestBuilder {
 
     // We now want to begin processing all of our requests
     public void getSnapshotQuotes(String[] symbols) {
+        // Create uri
 
+        // Create get request
+
+        // Execute request
+
+        // Get input stream
+
+        // Send it to the ResponseParser
+
+        // Return our hashmap
     }
 
     public void getSymbolLookup(String matchString) {
@@ -92,9 +102,7 @@ public class XMLRequestBuilder {
 
     }
 
-    public void getOptionChain(
-        String symbol
-    ) {
+    public void getOptionChain(String symbol) {
 
     }
 
