@@ -1,10 +1,18 @@
 package quant.http.requests;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import quant.http.client.TDClient;
 import quant.http.config.TDClientConfig;
 import quant.http.dao.StreamServerDao;
+import quant.xml.parser.ResponseParser;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,11 +21,14 @@ import java.util.Map;
  */
 public class XMLRequestBuilder {
     private TDClientConfig config;
-    private TDClient client;
+    private CloseableHttpClient client;
     private Map<String, String> mapPath;
+    private StreamServerDao dao;
 
     public XMLRequestBuilder(TDClientConfig config, CloseableHttpClient client, StreamServerDao dao) {
+        this.client = client;
         this.config = config;
+        this.dao = dao;
         mapPath = new HashMap<>();
         mapPath.put("SnapshotQuote", "/apps/100/Quote");
         mapPath.put("SymbolLookup", "/apps/100/SymbolLookup");
@@ -36,16 +47,22 @@ public class XMLRequestBuilder {
     }
 
     // We now want to begin processing all of our requests
-    public void getSnapshotQuotes(String[] symbols) {
+    public void getSnapshotQuotes(String[] symbols) throws URISyntaxException, IOException {
         // Create uri
-
+        URI uri = new URIBuilder()
+            .setScheme("https")
+            .setHost(config.get("host"))
+            .setPath(mapPath.get("SnapshotQuote"))
+            .setParameter("source", config.get("source"))
+            .build();
         // Create get request
+        HttpGet get = new HttpGet(uri);
 
         // Execute request
-
-        // Get input stream
+        ResponseParser.Quotes(client.execute(get));
 
         // Send it to the ResponseParser
+
 
         // Return our hashmap
     }
