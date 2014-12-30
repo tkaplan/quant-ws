@@ -59,7 +59,7 @@ public class XMLRequestBuilder {
         HttpGet get = new HttpGet(uri);
 
         // Execute request
-        ResponseParser.Quotes(client.execute(get));
+        //ResponseParser.Quotes(client.execute(get));
 
         // Send it to the ResponseParser
 

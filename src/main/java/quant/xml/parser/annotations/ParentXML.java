@@ -4,10 +4,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Created by dev on 12/27/14.
+ * Created by dev on 12/29/14.
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FieldData {
-    String name();
-    Class type();
+public @interface ParentXML {
 }

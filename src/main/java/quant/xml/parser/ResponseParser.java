@@ -6,14 +6,14 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import quant.xml.parser.annotations.BinaryData;
 import quant.xml.parser.annotations.Node;
+import quant.xml.parser.annotations.ParentXML;
 import quant.xml.parser.annotations.Root;
 import quant.xml.parser.responses.types.Quotes;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,13 +24,7 @@ import java.util.*;
  */
 public class ResponseParser {
 
-    // We have HashMap which does the following
-    // Response -> (ResponseType, ResponseParseMap)
-    // ResponseParseMap returns HashMap<String, Object>
-    // ResponseParseMap(NodeName, ParseFunction)
-
-    private static Map<String,Map> responseTypeMap;
-    private static Map<String, Object> responseParseMap;
+    private static Map<String, Object> responseTypeMap;
 
     /**
      * This method caches and creates our response type
@@ -45,11 +39,12 @@ public class ResponseParser {
         // our hashmap object
         Map<String, Object> mapParser = new HashMap<>();
         Reflections reflections = new Reflections("quant.xml.parser.responses.types");
-        Set<Class<?>> subTypes = reflections.getSubTypesOf(Object.class);
-        Iterator it = subTypes.iterator();
+        Set<Class<?>> allTypes = reflections.getTypesAnnotatedWith(BinaryData.class);
+        allTypes.addAll(reflections.getTypesAnnotatedWith(ParentXML.class));
+        Iterator it = allTypes.iterator();
         while(it.hasNext()) {
             Class clazz = (Class) it.next();
-            Annotation[] annotations = Quotes.class.getDeclaredAnnotations();
+            Annotation[] annotations = clazz.getDeclaredAnnotations();
             for(Annotation annotation : annotations) {
                 Class annClazz = annotation.annotationType();
                 if(annClazz.equals(Root.class)) {
@@ -60,7 +55,7 @@ public class ResponseParser {
                 } else if(annClazz.equals(BinaryData.class)) {
                     responseTypeMap.put(
                         clazz.getSimpleName(),
-                        buildBinaryMap(clazz)
+                        clazz.getDeclaredMethod("parse",DataInputStream.class)
                     );
                 }
             }
@@ -106,12 +101,16 @@ public class ResponseParser {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    private static Map<String, Object> parse(InputStream is, String parseType) throws ParserConfigurationException, IOException, SAXException, InvocationTargetException, IllegalAccessException {
-        DocumentBuilder builder = DocumentBuilderFactory
-            .newInstance()
-            .newDocumentBuilder();
-        Document doc = builder.parse(is);
-        return rootParse(doc, responseTypeMap.get(parseType));
+    public static Map<String, Object> parse(InputStream is, String parseType) throws ParserConfigurationException, IOException, SAXException, InvocationTargetException, IllegalAccessException {
+        Object obj = responseTypeMap.get(parseType);
+        if(obj instanceof Map) {
+            DocumentBuilder builder = DocumentBuilderFactory
+                .newInstance()
+                .newDocumentBuilder();
+            Document doc = builder.parse(is);
+            return rootParse(doc, (Map)obj);
+        }
+        return (Map<String, Object>) ((Method)obj).invoke(null,new DataInputStream(is));
     }
 
     /**
@@ -151,18 +150,18 @@ public class ResponseParser {
      */
     private static Method parseMethod(Class type) throws NoSuchMethodException {
         if(type.equals(String.class)) {
-            return RootMethodMap.class.getDeclaredMethod("StringType");
+            return RootMethodMap.class.getDeclaredMethod("StringType",org.w3c.dom.Node.class, Map.class);
         } else if (type.equals(Integer.class)) {
-            return RootMethodMap.class.getDeclaredMethod("IntegerType");
+            return RootMethodMap.class.getDeclaredMethod("IntegerType",org.w3c.dom.Node.class, Map.class);
         }   else if (type.equals(Boolean.class)) {
-            return RootMethodMap.class.getDeclaredMethod("BooleanType");
+            return RootMethodMap.class.getDeclaredMethod("BooleanType",org.w3c.dom.Node.class, Map.class);
         }   else if (type.equals(Float.class)) {
-            return RootMethodMap.class.getDeclaredMethod("FloatType");
+            return RootMethodMap.class.getDeclaredMethod("FloatType",org.w3c.dom.Node.class, Map.class);
         }   else if (type.equals(Double.class)) {
-            return RootMethodMap.class.getDeclaredMethod("DoubleType");
+            return RootMethodMap.class.getDeclaredMethod("DoubleType",org.w3c.dom.Node.class, Map.class);
         }
 
-        return RootMethodMap.class.getDeclaredMethod("RootType");
+        return RootMethodMap.class.getDeclaredMethod("RootType",org.w3c.dom.Node.class, Map.class);
     }
 
     /**
@@ -181,17 +180,10 @@ public class ResponseParser {
             Method method = parseMethod(node.type());
             rootMap.put(node.name(),method);
             // If we get a root type method, we must add an embedded hashmap
-            if(method.equals(RootMethodMap.class.getDeclaredMethod("RootType"))) {
+            if(method.equals(RootMethodMap.class.getDeclaredMethod("RootType",org.w3c.dom.Node.class, Map.class))) {
                 rootMap.put(node.name() + "-nested", buildRootMap(node.type()));
             }
         }
         return rootMap;
-    }
-
-    public static Map<String,Object> buildBinaryMap(Class clazz) {
-        Map<String,Object> binaryMap = new HashMap<>();
-        BinaryData bin = (BinaryData) clazz.getDeclaredAnnotation(BinaryData.class);
-        binaryMap.put("name", bin.name());
-        return new HashMap<>();
     }
 }

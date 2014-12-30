@@ -1,6 +1,7 @@
 package quant.xml.parser.responses.types;
 
 import quant.xml.parser.annotations.Node;
+import quant.xml.parser.annotations.ParentXML;
 import quant.xml.parser.annotations.Root;
 
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 /**
  * Created by dev on 12/24/14.
  */
+@ParentXML
 @Root(
     name="amtd",
     nodes={

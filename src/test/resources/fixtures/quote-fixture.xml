@@ -1,0 +1,85 @@
+<?xml version="1.0" ?>
+<amtd>
+    <result>OK</result>
+    <quote-list>
+        <error></error>
+        <quote>
+            <error></error>
+            <symbol>DELL</symbol>
+            <description>DELL INC COM Status Alert: Delinquent</description>
+            <bid>27.27</bid>
+            <ask>27.28</ask>
+            <bid-ask-size>2800X4600</bid-ask-size>
+            <last>27.28</last>
+            <last-trade-size>200</last-trade-size>
+            <last-trade-date>2007-06-12 10:03:11 EDT</last-trade-date>
+            <open>27.35</open>
+            <high>27.49</high>
+            <low>27.25</low>
+            <close>27.60</close>
+            <volume>2028822</volume>
+            <year-high>28.04</year-high>
+            <year-low>18.95</year-low>
+            <real-time>true</real-time>
+            <exchange>NASDAQ</exchange>
+            <asset-type>E</asset-type>
+            <change>-0.32</change>
+            <change-percent>-1.16%</change-percent>
+        </quote>
+        <quote>
+            <error></error>
+            <symbol>FFFEX</symbol>
+            <description>FID ABERDEEN ST TR FREEDM 2030</description>
+            <nav>16.75</nav>
+            <change>0.02</change>
+            <real-time>true</real-time>
+            <asset-type>F</asset-type>
+        </quote>
+        <quote>
+            <error></error>
+            <symbol>AMTD_20070922P12.5</symbol>
+            <description>AMTD Sep 22 2007 12.5 Put</description>
+            <bid>3.50</bid>
+            <ask>3.70</ask>
+            <bid-ask-size>244X61</bid-ask-size>
+            <last>3.70</last>
+            <last-trade-size>1</last-trade-size>
+            <last-trade-date>2007-06-12 10:45:27 EDT</last-trade-date>
+            <open>4.00</open>
+            <high>5.29</high>
+            <low>3.40</low>
+            <close>9.10</close>
+            <volume>5017</volume>
+            <strike-price>510.00</strike-price>
+            <open-interest>14775</open-interest>
+            <expiration-month>6</expiration-month>
+            <expiration-year>2007</expiration-year>
+            <real-time>true</real-time>
+            <exchange>OPRA</exchange>
+            <asset-type>O</asset-type>
+            <underlying-symbol>GOOG</underlying-symbol>
+            <delta>0.197</delta>
+            <gamma>0.008</gamma>
+            <theta>-1.193</theta>
+            <vega>0.139</vega>
+            <rho>0.01</rho>
+            <implied-volatility>68.074</implied-volatility>
+            <days-to-expiration>4</days-to-expiration>
+            <time-value-index>3.70</time-value-index>
+            <multiplier>100.00</multiplier>
+        </quote>
+        <quote>
+            <error></error>
+            <symbol>$SPX.X</symbol>
+            <description>NEW S & P 500 INDEX</description>
+            <high>1509.12</high>
+            <low>1497.69</low>
+            <last>1499.66</last>
+            <close>1509.12</close>
+            <year-high>1509.12</year-high>
+            <year-low>1219.29</year-low>
+            <real-time>true</real-time>
+            <asset-type>I</asset-type>
+        </quote>
+    </quote-list>
+</amtd>
