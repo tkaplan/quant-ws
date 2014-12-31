@@ -8,7 +8,6 @@ import quant.xml.parser.annotations.BinaryData;
 import quant.xml.parser.annotations.Node;
 import quant.xml.parser.annotations.ParentXML;
 import quant.xml.parser.annotations.Root;
-import quant.xml.parser.responses.types.Quotes;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,36 +32,37 @@ public class ResponseParser {
      * @throws NoSuchMethodException
      */
     public static void init() throws NoSuchMethodException {
-        // Build ResponseTypeMap
-        responseTypeMap = new HashMap<>();
-
-        compare = RootMethodMap.class.getDeclaredMethod("RootType",org.w3c.dom.Node.class, Map.class);
-
-        // First response parse will be slow but then we will cache
-        // our hashmap object
-        Map<String, Object> mapParser = new HashMap<>();
-        Reflections reflections = new Reflections("quant.xml.parser.responses.types");
-        Set<Class<?>> allTypes = reflections.getTypesAnnotatedWith(BinaryData.class);
-        allTypes.addAll(reflections.getTypesAnnotatedWith(ParentXML.class));
-        Iterator it = allTypes.iterator();
-        while(it.hasNext()) {
-            Class clazz = (Class) it.next();
-            Annotation[] annotations = clazz.getDeclaredAnnotations();
-            for(Annotation annotation : annotations) {
-                Class annClazz = annotation.annotationType();
-                if(annClazz.equals(Root.class)) {
-                    responseTypeMap.put(
-                        clazz.getSimpleName(),
-                        buildRootMap(clazz)
-                    );
-                } else if(annClazz.equals(BinaryData.class)) {
-                    responseTypeMap.put(
-                        clazz.getSimpleName(),
-                        clazz.getDeclaredMethod("parse",DataInputStream.class)
-                    );
-                }
-            }
-        }
+//        System.out.println("this explains it");
+//        // Build ResponseTypeMap
+//        responseTypeMap = new HashMap<>();
+//
+//        compare = RootMethodMap.class.getDeclaredMethod("RootType",org.w3c.dom.Node.class, Map.class);
+//
+//        // First response parse will be slow but then we will cache
+//        // our hashmap object
+//        Map<String, Object> mapParser = new HashMap<>();
+//        Reflections reflections = new Reflections("quant.xml.parser.responses");
+//        Set<Class<?>> allTypes = reflections.getTypesAnnotatedWith(BinaryData.class);
+//        allTypes.addAll(reflections.getTypesAnnotatedWith(ParentXML.class));
+//        Iterator it = allTypes.iterator();
+//        while(it.hasNext()) {
+//            Class clazz = (Class) it.next();
+//            Annotation[] annotations = clazz.getDeclaredAnnotations();
+//            for(Annotation annotation : annotations) {
+//                Class annClazz = annotation.annotationType();
+//                if(annClazz.equals(Root.class)) {
+//                    responseTypeMap.put(
+//                        clazz.getSimpleName(),
+//                        buildRootMap(clazz)
+//                    );
+//                } else if(annClazz.equals(BinaryData.class)) {
+//                    responseTypeMap.put(
+//                        clazz.getSimpleName(),
+//                        clazz.getDeclaredMethod("parse",InputStream.class)
+//                    );
+//                }
+//            }
+//        }
     }
 
     /**
@@ -105,16 +105,22 @@ public class ResponseParser {
      * @throws IllegalAccessException
      */
     public static Map<String, Object> parse(InputStream is, String parseType) throws ParserConfigurationException, IOException, SAXException, InvocationTargetException, IllegalAccessException {
-        Object obj = responseTypeMap.get(parseType);
-        if(!(obj instanceof Method)) {
-            DocumentBuilder builder = DocumentBuilderFactory
-                .newInstance()
-                .newDocumentBuilder();
-            Document doc = builder.parse(is);
-            org.w3c.dom.Node parent = doc.getChildNodes().item(0);
-            return rootParse(parent, (Map)obj);
-        }
-        return (Map<String, Object>) ((Method)obj).invoke(null, is);
+//        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+//        System.out.println(responseTypeMap.size());
+//        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+//        Object obj = responseTypeMap.get(parseType);
+//        System.out.println(obj instanceof  Method);
+//        System.out.println("****************************************");
+//        if(!(obj instanceof Method)) {
+//            DocumentBuilder builder = DocumentBuilderFactory
+//                .newInstance()
+//                .newDocumentBuilder();
+//            Document doc = builder.parse(is);
+//            org.w3c.dom.Node parent = doc.getChildNodes().item(0);
+//            return rootParse(parent, (Map)obj);
+//        }
+//        return (Map<String, Object>) ((Method)obj).invoke(null, is);
+        return new HashMap<>();
     }
 
     /**

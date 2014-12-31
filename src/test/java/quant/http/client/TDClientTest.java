@@ -30,7 +30,7 @@ public class TDClientTest {
     @Deployment
     public static Archive<?> createDeployment() {
         File[] files = Maven.resolver().loadPomFromFile("pom.xml").
-            importRuntimeDependencies().resolve().withoutTransitivity().asFile();
+            importCompileAndRuntimeDependencies().resolve().withoutTransitivity().asFile();
 
         return ShrinkWrap.create(WebArchive.class, "TDClientTest.war")
             .addPackages(true, "quant")
@@ -43,7 +43,6 @@ public class TDClientTest {
 
     @Test
     public void client () {
-        //Assert.fail("Not implemented");
         XMLRequestBuilder xmlBuilder = client.XMLRequestBuilder();
         PriceHistoryBuilder priceHistory = xmlBuilder.getPriceHistoryBuilder();
         priceHistory.setRequestValue("adxs, nwbo");

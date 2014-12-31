@@ -1,10 +1,8 @@
-package quant.xml.parser.responses.types;
+package quant.xml.parser.responses;
 
 import quant.xml.parser.annotations.Node;
 import quant.xml.parser.annotations.ParentXML;
 import quant.xml.parser.annotations.Root;
-
-import java.util.Map;
 
 /**
  * Created by dev on 12/24/14.

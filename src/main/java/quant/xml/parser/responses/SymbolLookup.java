@@ -1,4 +1,4 @@
-package quant.xml.parser.responses.types;
+package quant.xml.parser.responses;
 
 import quant.xml.parser.annotations.Node;
 import quant.xml.parser.annotations.ParentXML;

@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by dev on 12/30/14.
@@ -36,7 +35,7 @@ public class ParseTest {
         Assert.assertEquals((Double)amtd.get("implied-volatility"), new Double(68.074));
 
         Map spx = (Map) quotesList.get(3);
-        Assert.assertEquals((String)spx.get("symbol"),"$SPX.X");
+        Assert.assertEquals((String) spx.get("symbol"), "$SPX.X");
         Assert.assertEquals((String)spx.get("asset-type"), "I");
     }
 

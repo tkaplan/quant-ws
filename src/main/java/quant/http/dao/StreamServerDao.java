@@ -26,15 +26,15 @@ public class StreamServerDao {
     private List<NameValuePair> nvps;
     private String streamRequest;
     private String scv;
+    private TDClientConfig config;
 
-    @Inject
-    TDClientConfig config;
-
-    public StreamServerDao () {
+    public StreamServerDao (TDClientConfig config) {
         entity = new StreamServerEntity();
+        this.config = config;
     }
 
-    public StreamServerDao (XMLLoginEntity loginEntity, XMLStreamInfoEntity streamInfoEntity) {
+    public StreamServerDao (TDClientConfig config, XMLLoginEntity loginEntity, XMLStreamInfoEntity streamInfoEntity) {
+        this.config = config;
         this.xmlLoginEntity = loginEntity;
         this.xmlStreamInfoEntity = streamInfoEntity;
         entity = new StreamServerEntity();

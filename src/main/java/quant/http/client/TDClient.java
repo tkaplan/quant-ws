@@ -8,9 +8,6 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
-import org.apache.http.nio.client.HttpAsyncClient;
 import org.xml.sax.SAXException;
 import quant.http.config.TDClientConfig;
 import quant.http.dao.StreamServerDao;
@@ -38,7 +35,6 @@ import java.util.concurrent.ExecutionException;
  */
 @Startup
 @Singleton(
-    description="Shared async client",
     mappedName="TDClient",
     name="TDClient"
 )
@@ -51,7 +47,7 @@ public class TDClient {
     private StreamRequestBuilder streamRequestBuilder;
     private StreamServerDao dao;
 
-    @Resource(name = "DefaultManagedExecutorService")
+    @Resource
     ManagedExecutorService executor;
 
     @PostConstruct
@@ -60,8 +56,8 @@ public class TDClient {
         builder = new RequestBuilder(config);
         client = HttpClients.createDefault();
         ResponseParser.init();
-        // Authenticate logs us in and grabs
-        // our stream info
+//        Authenticate logs us in and grabs
+//        our stream info
         dao = builder.authenticate(client);
         this.xmlRequestBuilder = new XMLRequestBuilder(config, client, dao);
         this.streamRequestBuilder = new StreamRequestBuilder(config, client, dao);

@@ -14,7 +14,6 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.message.BasicNameValuePair;
 import quant.http.client.TDClient;
 import quant.http.config.TDClientConfig;
@@ -57,7 +56,7 @@ public class RequestBuilder {
         HttpGet streamInfoReq = streamInfo();
         HttpResponse streamInfoResponse = client.execute(streamInfoReq);
         XMLStreamInfoDao streamInfoDao = ResponseHandlerFactory.getResponseHandler(new XMLStreamInfoDao(), streamInfoResponse);
-        return new StreamServerDao(loginDao.getEntity(), streamInfoDao.getEntity());
+        return new StreamServerDao(config, loginDao.getEntity(), streamInfoDao.getEntity());
     }
 
     public HttpPost login() throws URISyntaxException, MalformedURLException, UnsupportedEncodingException {
