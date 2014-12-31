@@ -10,13 +10,12 @@ import java.util.Map;
  * Created by dev on 12/27/14.
  */
 @BinaryData
-public class VolatilityHistory implements BinaryParse {
+public class VolatilityHistory {
     public VolatilityHistory() {
 
     }
 
-    @Override
-    public Map<String, Object> parse(DataInputStream dis) throws IOException {
+    public static Map<String, Object> parse(DataInputStream dis) throws IOException {
         return null;
     }
 }

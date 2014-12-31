@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by dev on 12/30/14.
@@ -37,5 +38,16 @@ public class ParseTest {
         Map spx = (Map) quotesList.get(3);
         Assert.assertEquals((String)((List)spx.get("symbol")).get(0),"$SPX.X");
         Assert.assertEquals((String) ((List)spx.get("asset-type")).get(0), "I");
+    }
+
+    @Test
+    public void priceHistoryTest() throws InvocationTargetException, ParserConfigurationException, IllegalAccessException, SAXException, IOException {
+        InputStream is = ResponseParserTest.getPriceHistoryFixture();
+        Map priceHistory = ResponseParser.parse(is,"PriceHistory");
+        List quotes = (List) ((Map)priceHistory.get("AMTD")).get("quotes");
+        Map quote1 = (Map) quotes.get(0);
+        Map quote2 = (Map) quotes.get(1);
+        Assert.assertEquals((Float)quote1.get("volume"), new Float(36806.08));
+        Assert.assertEquals((Float)quote2.get("volume"), new Float(29463.25));
     }
 }

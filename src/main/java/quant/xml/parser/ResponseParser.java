@@ -103,7 +103,7 @@ public class ResponseParser {
      */
     public static Map<String, Object> parse(InputStream is, String parseType) throws ParserConfigurationException, IOException, SAXException, InvocationTargetException, IllegalAccessException {
         Object obj = responseTypeMap.get(parseType);
-        if(obj instanceof Map) {
+        if(!(obj instanceof Method)) {
             DocumentBuilder builder = DocumentBuilderFactory
                 .newInstance()
                 .newDocumentBuilder();
