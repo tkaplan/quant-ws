@@ -114,7 +114,7 @@ public class ResponseParser {
             org.w3c.dom.Node parent = doc.getChildNodes().item(0);
             return rootParse(parent, (Map)obj);
         }
-        return (Map<String, Object>) ((Method)obj).invoke(null,new DataInputStream(is));
+        return (Map<String, Object>) ((Method)obj).invoke(null, is);
     }
 
     /**

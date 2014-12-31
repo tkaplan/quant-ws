@@ -1,26 +1,36 @@
 package quant.http.client;
 
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.nio.client.HttpAsyncClient;
+import org.xml.sax.SAXException;
 import quant.http.config.TDClientConfig;
 import quant.http.dao.StreamServerDao;
 import quant.http.requests.RequestBuilder;
 import quant.http.requests.StreamRequestBuilder;
 import quant.http.requests.XMLRequestBuilder;
+import quant.xml.parser.ResponseParser;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -34,7 +44,7 @@ import java.util.concurrent.ExecutionException;
 )
 public class TDClient {
 
-    private CloseableHttpAsyncClient client;
+    private CloseableHttpClient client;
     private TDClientConfig config;
     private RequestBuilder builder;
     private XMLRequestBuilder xmlRequestBuilder;
@@ -45,10 +55,11 @@ public class TDClient {
     ManagedExecutorService executor;
 
     @PostConstruct
-    public void startup() throws IOException, URISyntaxException {
+    public void startup() throws IOException, URISyntaxException, NoSuchMethodException {
         config = new TDClientConfig();
         builder = new RequestBuilder(config);
-        CloseableHttpClient client = HttpClients.createDefault();
+        client = HttpClients.createDefault();
+        ResponseParser.init();
         // Authenticate logs us in and grabs
         // our stream info
         dao = builder.authenticate(client);
@@ -69,5 +80,25 @@ public class TDClient {
         this.dao = dao;
     }
 
-
+    public void execute(HttpRequestBase request) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    HttpResponse response = client.execute(request);
+                    ResponseParser.parse(response.getEntity().getContent(), "PriceHistory");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParserConfigurationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (SAXException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }

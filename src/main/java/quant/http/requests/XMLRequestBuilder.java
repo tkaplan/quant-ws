@@ -7,14 +7,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import quant.http.client.TDClient;
 import quant.http.config.TDClientConfig;
 import quant.http.dao.StreamServerDao;
+import quant.http.requests.builders.PriceHistoryBuilder;
 import quant.xml.parser.ResponseParser;
+import quant.http.requests.builders.QuoteBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by dev on 12/24/14.
@@ -46,26 +47,15 @@ public class XMLRequestBuilder {
         mapPath.put("QuoteNews", "/apps/100/QuoteNews");
     }
 
-    // We now want to begin processing all of our requests
-    public void getSnapshotQuotes(String[] symbols) throws URISyntaxException, IOException {
-        // Create uri
-        URI uri = new URIBuilder()
-            .setScheme("https")
-            .setHost(config.get("host"))
-            .setPath(mapPath.get("SnapshotQuote"))
-            .setParameter("source", config.get("source"))
-            .build();
-        // Create get request
-        HttpGet get = new HttpGet(uri);
-
-        // Execute request
-        //ResponseParser.Quotes(client.execute(get));
-
-        // Send it to the ResponseParser
-
-
-        // Return our hashmap
+    public QuoteBuilder getQuoteBuilder() {
+        return new QuoteBuilder(config,mapPath.get("SnapshotQuote"));
     }
+
+    public PriceHistoryBuilder getPriceHistoryBuilder() {
+        return new PriceHistoryBuilder(config,mapPath.get("SnapshotQuote"));
+    }
+
+
 
     public void getSymbolLookup(String matchString) {
 
