@@ -25,6 +25,7 @@ import java.util.*;
 public class ResponseParser {
 
     private static Map<String, Object> responseTypeMap;
+    private static Method compare;
 
     /**
      * This method caches and creates our response type
@@ -34,6 +35,8 @@ public class ResponseParser {
     public static void init() throws NoSuchMethodException {
         // Build ResponseTypeMap
         responseTypeMap = new HashMap<>();
+
+        compare = RootMethodMap.class.getDeclaredMethod("RootType",org.w3c.dom.Node.class, Map.class);
 
         // First response parse will be slow but then we will cache
         // our hashmap object
@@ -136,11 +139,15 @@ public class ResponseParser {
             if(map.containsKey(node.getNodeName())) {
                 // This will give us the method to invoke
                 Method method = (Method)map.get(node.getNodeName());
-                if(!entity.containsKey(node.getNodeName())) {
-                    List elements = new ArrayList<>();
-                    entity.put(node.getNodeName(),elements);
+                if(method.equals(compare)) {
+                    if (!entity.containsKey(node.getNodeName())) {
+                        List elements = new ArrayList<>();
+                        entity.put(node.getNodeName(), elements);
+                    }
+                    ((List) entity.get(node.getNodeName())).add(method.invoke(null, node, map));
+                } else {
+                    entity.put(node.getNodeName(), method.invoke(null, node, map));
                 }
-                ((List)entity.get(node.getNodeName())).add(method.invoke(null, node, map));
             }
         }
         return entity;

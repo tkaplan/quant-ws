@@ -24,20 +24,20 @@ public class ParseTest {
         List quotesList = (List)quoteList.get("quote");
 
         Map dell = (Map) quotesList.get(0);
-        Assert.assertEquals((String)((List)dell.get("symbol")).get(0),"DELL");
-        Assert.assertEquals((Integer) ((List) dell.get("volume")).get(0), new Integer(2028822));
+        Assert.assertEquals((String)dell.get("symbol"),"DELL");
+        Assert.assertEquals((Integer)dell.get("volume"), new Integer(2028822));
 
         Map fffex = (Map) quotesList.get(1);
-        Assert.assertEquals((String)((List)fffex.get("symbol")).get(0),"FFFEX");
-        Assert.assertEquals((Double) ((List)fffex.get("nav")).get(0), new Double(16.75));
+        Assert.assertEquals((String)fffex.get("symbol"),"FFFEX");
+        Assert.assertEquals((Double)fffex.get("nav"), new Double(16.75));
 
         Map amtd = (Map) quotesList.get(2);
-        Assert.assertEquals((String)((List)amtd.get("symbol")).get(0),"AMTD_20070922P12.5");
-        Assert.assertEquals((Double) ((List)amtd.get("implied-volatility")).get(0), new Double(68.074));
+        Assert.assertEquals((String)amtd.get("symbol"),"AMTD_20070922P12.5");
+        Assert.assertEquals((Double)amtd.get("implied-volatility"), new Double(68.074));
 
         Map spx = (Map) quotesList.get(3);
-        Assert.assertEquals((String)((List)spx.get("symbol")).get(0),"$SPX.X");
-        Assert.assertEquals((String) ((List)spx.get("asset-type")).get(0), "I");
+        Assert.assertEquals((String)spx.get("symbol"),"$SPX.X");
+        Assert.assertEquals((String)spx.get("asset-type"), "I");
     }
 
     @Test
