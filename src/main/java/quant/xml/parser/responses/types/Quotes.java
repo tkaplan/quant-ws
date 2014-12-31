@@ -66,7 +66,7 @@ public class Quotes {
                 @Node(name="implied-volatility",type=Double.class),
                 @Node(name="days-to-expiration",type=Integer.class),
                 @Node(name="time-value-index",type=Double.class),
-                @Node(name="multiplier",type=Integer.class),
+                @Node(name="multiplier",type=Double.class),
                 @Node(name="year-high",type=Double.class),
                 @Node(name="year-low",type=Double.class),
                 @Node(name="reql-time",type=String.class),

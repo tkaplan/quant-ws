@@ -108,7 +108,8 @@ public class ResponseParser {
                 .newInstance()
                 .newDocumentBuilder();
             Document doc = builder.parse(is);
-            return rootParse(doc, (Map)obj);
+            org.w3c.dom.Node parent = doc.getChildNodes().item(0);
+            return rootParse(parent, (Map)obj);
         }
         return (Map<String, Object>) ((Method)obj).invoke(null,new DataInputStream(is));
     }
@@ -135,7 +136,11 @@ public class ResponseParser {
             if(map.containsKey(node.getNodeName())) {
                 // This will give us the method to invoke
                 Method method = (Method)map.get(node.getNodeName());
-                entity.put(node.getLocalName(), method.invoke(null, node, map));
+                if(!entity.containsKey(node.getNodeName())) {
+                    List elements = new ArrayList<>();
+                    entity.put(node.getNodeName(),elements);
+                }
+                ((List)entity.get(node.getNodeName())).add(method.invoke(null, node, map));
             }
         }
         return entity;

@@ -25,6 +25,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Codecs -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.9</version>
+            </dependency>
+
 
             <!-- Reflections -->
             <dependency>
@@ -102,6 +109,12 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <!-- Codecs -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
 
         <!-- Java EE -->
 
