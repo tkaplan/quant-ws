@@ -52,7 +52,7 @@ public class XMLRequestBuilder {
     }
 
     public PriceHistoryBuilder getPriceHistoryBuilder() {
-        return new PriceHistoryBuilder(config,mapPath.get("SnapshotQuote"));
+        return new PriceHistoryBuilder(config,mapPath.get("PriceHistory"));
     }
 
 

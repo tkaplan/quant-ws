@@ -14,6 +14,7 @@ import quant.http.dao.StreamServerDao;
 import quant.http.requests.RequestBuilder;
 import quant.http.requests.StreamRequestBuilder;
 import quant.http.requests.XMLRequestBuilder;
+import quant.http.requests.builders.RequestBuilderInterface;
 import quant.xml.parser.ResponseParser;
 
 import javax.annotation.PostConstruct;
@@ -27,8 +28,10 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Created by dev on 12/20/14.
@@ -38,7 +41,8 @@ import java.util.concurrent.ExecutionException;
     mappedName="TDClient",
     name="TDClient"
 )
-public class TDClient {
+public class
+    TDClient {
 
     private CloseableHttpClient client;
     private TDClientConfig config;
@@ -76,25 +80,16 @@ public class TDClient {
         this.dao = dao;
     }
 
-    public void execute(HttpRequestBase request) {
-        executor.execute(new Runnable() {
+    public Future execute(RequestBuilderInterface request) {
+        Callable task = new Callable<Map>() {
             @Override
-            public void run() {
-                try {
-                    HttpResponse response = client.execute(request);
-                    ResponseParser.parse(response.getEntity().getContent(), "PriceHistory");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ParserConfigurationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (SAXException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+            public Map call() throws Exception {
+                Map responseMap = null;
+                HttpResponse response = client.execute(request.getRequest());
+                responseMap = ResponseParser.parse(response.getEntity().getContent(), request.getParseClassName());
+                return responseMap;
             }
-        });
+        };
+        return executor.submit(task);
     }
 }

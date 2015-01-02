@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by dev on 12/30/14.
  */
-public class ParseTest {
+public class ParseModule {
     @Test
     public void quoteParseTest() throws InvocationTargetException, ParserConfigurationException, IllegalAccessException, SAXException, IOException {
         InputStream is = ResponseParserTest.getQuoteFixture();

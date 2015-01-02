@@ -25,7 +25,7 @@ public class TDClientConfigTest {
     @Deployment
     public static Archive<?> createDeployment() {
         File[] files = Maven.resolver().loadPomFromFile("pom.xml").
-            importCompileAndRuntimeDependencies().resolve().withoutTransitivity().asFile();
+            importCompileAndRuntimeDependencies().resolve().withTransitivity().asFile();
 
         return ShrinkWrap.create(WebArchive.class, "TDClientConfig.war")
             .addClasses(TDClientConfig.class)

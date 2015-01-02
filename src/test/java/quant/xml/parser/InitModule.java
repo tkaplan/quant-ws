@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by dev on 12/29/14.
  */
-public class InitTest {
+public class InitModule {
     @Test
     public void initTest() throws
         InvocationTargetException,

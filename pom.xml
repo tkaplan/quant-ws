@@ -102,19 +102,6 @@
 
     <dependencies>
 
-        <!-- Reflections -->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections-maven</artifactId>
-        </dependency>
-
-        <!-- Codecs -->
-
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
-
         <!-- Java EE -->
 
         <dependency>
@@ -177,6 +164,20 @@
             <scope>test</scope>
             <type>pom</type>
         </dependency>
+
+        <!-- Reflections -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections-maven</artifactId>
+        </dependency>
+
+        <!-- Codecs -->
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+
 
         <!-- Log4j -->
 

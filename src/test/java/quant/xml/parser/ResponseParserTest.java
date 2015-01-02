@@ -13,7 +13,7 @@ import java.io.*;
  * Created by dev on 12/29/14.
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({InitTest.class,ParseTest.class})
+@Suite.SuiteClasses({InitModule.class,ParseModule.class})
 public class ResponseParserTest {
     private static InputStream quoteFixture;
     private static ByteArrayInputStream priceHistoryFixture;
