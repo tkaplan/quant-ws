@@ -113,7 +113,7 @@ public class ResponseUtil {
                 recordMap.put("field", column.field());
                 recordMap.put("type", column.type());
                 // Add our type class to an index
-                typeMap.put((short)column.index(),recordMap);
+                typeMap.put(column.index(),recordMap);
             }
             columnMap.put(clazz, typeMap);
         }
@@ -123,7 +123,7 @@ public class ResponseUtil {
     public static Map<Short, Class> init(Class classType) throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException {
         // This is used for mapping are parser function to our column type
         initializeParseMap();
-        Reflections reflections = new Reflections("dev.http.parser.headers.responses");
+        Reflections reflections = new Reflections("quant.stream.parser.headers.responses");
         Set<Class> subTypes = reflections.getSubTypesOf(classType);
         // We must now initialize our typeMap
         initializeColumnMap(subTypes);

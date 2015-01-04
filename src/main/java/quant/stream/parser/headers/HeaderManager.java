@@ -23,7 +23,7 @@ public class HeaderManager {
         StreamingResponse.init();
     }
 
-    public static void parse(byte header, DataInputStream dis) throws Exception {
+    public static Map parse(byte header, DataInputStream dis) throws Exception {
         Class responseClass = frames.get(header);
 
         // Can we handle this exception?
@@ -36,6 +36,6 @@ public class HeaderManager {
 
         Method method = responseClass.getMethod("parse", DataInputStream.class);
         // Invoke our method parse
-        method.invoke(null, dis);
+        return (Map)method.invoke(null, dis);
     }
 }

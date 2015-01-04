@@ -1,8 +1,15 @@
 package quant.http.dao;
 
 
+import org.apache.http.Consts;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
 import quant.http.config.TDClientConfig;
 import quant.http.entities.StreamServerEntity;
@@ -10,11 +17,13 @@ import quant.xml.entities.XMLLoginEntity;
 import quant.xml.entities.XMLStreamInfoEntity;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dev on 12/23/14.
@@ -28,24 +37,14 @@ public class StreamServerDao {
     private String scv;
     private TDClientConfig config;
 
-    public StreamServerDao (TDClientConfig config) {
-        entity = new StreamServerEntity();
-        this.config = config;
-    }
-
-    public StreamServerDao (TDClientConfig config, XMLLoginEntity loginEntity, XMLStreamInfoEntity streamInfoEntity) {
+    public StreamServerDao (TDClientConfig config, XMLLoginEntity loginEntity, XMLStreamInfoEntity streamInfoEntity) throws UnsupportedEncodingException {
         this.config = config;
         this.xmlLoginEntity = loginEntity;
         this.xmlStreamInfoEntity = streamInfoEntity;
         entity = new StreamServerEntity();
         setPostEntity(loginEntity, streamInfoEntity);
-        streamRequest = "";
         nvpsInit();
-        try {
-            newStream();
-        } catch (UnsupportedEncodingException e) {
-            System.out.println("Couldn't initialize scv.");
-        }
+        newStream();
     }
 
     public void setPostEntity(XMLLoginEntity loginEntity, XMLStreamInfoEntity streamInfoEntity) {
@@ -61,14 +60,6 @@ public class StreamServerDao {
         entity.setTimestamp(streamInfoEntity.getTimestamp());
         entity.setToken(streamInfoEntity.getToken());
         entity.setUsergroup(streamInfoEntity.getUsergroup());
-    }
-
-    public StreamServerEntity getEntity () {
-        return entity;
-    }
-
-    public void setPostEntity() {
-
     }
 
     private void nvpsInit () {
@@ -89,25 +80,25 @@ public class StreamServerDao {
     }
 
     public void newStream () throws UnsupportedEncodingException {
-        String source = config.get("source");
-        String control = "false";
-        String version= config.get("version");
-        scv = "|source=" + source + "|control=" + control;
+        streamRequest = "|S=QUOTE&C=SUBS&P=DELL&T=0";
+        scv = "|source=" + config.get("source") + "|control=false";
     }
 
     private void markOld () throws UnsupportedEncodingException {
-        String source = config.get("source");
-        String control = "true";
-        String version= config.get("version");
         streamRequest = "";
-        scv = "|source=" + source + "|control=" + control;
+        scv = "|source=" + config.get("source") + "|control=true";
     }
 
     public void setStreamRequest (String request) {
-        streamRequest = request;
+        streamRequest = "|";
+        streamRequest += request;
     }
 
-    public HttpGet getURLStreamRequest() throws URISyntaxException, UnsupportedEncodingException {
+    public HttpGet getStreamRequest() throws URISyntaxException, UnsupportedEncodingException {
+        RequestConfig requestConfig = RequestConfig.custom()
+            .setExpectContinueEnabled(true)
+            .setDecompressionEnabled(true)
+            .build();
 
         String nvpsStr = "";
 
@@ -120,10 +111,13 @@ public class StreamServerDao {
         }
 
         String request = nvpsStr + scv + streamRequest;
+
         request = URLEncoder.encode(request, "UTF-8");
         request = "https://" + entity.getStreamUrl() + "/" + request;
+        HttpGet get = new HttpGet(request);
+        get.setConfig(requestConfig);
         markOld();
 
-        return new HttpGet(request);
+        return get;
     }
 }

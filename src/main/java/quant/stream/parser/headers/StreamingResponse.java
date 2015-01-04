@@ -23,15 +23,12 @@ public class StreamingResponse {
         responses = ResponseUtil.init(StreamingResponse.class);
     }
 
-    public static void parse(DataInputStream dis) throws IOException, InvocationTargetException, IllegalAccessException {
+    public static Map parse(DataInputStream dis) throws IOException, InvocationTargetException, IllegalAccessException {
         short messageLength = dis.readShort();
         short sid = dis.readShort();
         Class parseClass = responses.get(sid);
         Map<Object, Object> result = ResponseUtil.parseColumns(parseClass, dis);
         dis.readByte();
-    }
-
-    public static Map<Short, Class> getResponseParserMap() {
-        return responses;
+        return result;
     }
 }

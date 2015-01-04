@@ -32,7 +32,6 @@ public class ResponseParser {
      * @throws NoSuchMethodException
      */
     public static void init() throws NoSuchMethodException {
-        System.out.println("this explains it");
         // Build ResponseTypeMap
         responseTypeMap = new HashMap<>();
 

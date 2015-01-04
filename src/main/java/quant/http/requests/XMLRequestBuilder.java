@@ -22,14 +22,10 @@ import java.util.*;
  */
 public class XMLRequestBuilder {
     private TDClientConfig config;
-    private CloseableHttpClient client;
     private Map<String, String> mapPath;
-    private StreamServerDao dao;
 
-    public XMLRequestBuilder(TDClientConfig config, CloseableHttpClient client, StreamServerDao dao) {
-        this.client = client;
+    public XMLRequestBuilder(TDClientConfig config) {
         this.config = config;
-        this.dao = dao;
         mapPath = new HashMap<>();
         mapPath.put("SnapshotQuote", "/apps/100/Quote");
         mapPath.put("SymbolLookup", "/apps/100/SymbolLookup");
@@ -51,105 +47,5 @@ public class XMLRequestBuilder {
         return new QuoteBuilder(config,mapPath.get("SnapshotQuote"));
     }
 
-    public PriceHistoryBuilder getPriceHistoryBuilder() {
-        return new PriceHistoryBuilder(config,mapPath.get("PriceHistory"));
-    }
-
-
-
-    public void getSymbolLookup(String matchString) {
-
-    }
-
-    /**
-     *
-     * @param symbols
-     * @param periodtype
-     * @param period
-     * @param intervaltype
-     * @param intervalduration
-     * @param startdate
-     */
-    public void getPriceHistory(
-        String[] symbols,
-        String periodtype,
-        int period,
-        String intervaltype,
-        int intervalduration,
-        String startdate
-    ) {
-
-    }
-
-    /**
-     *
-     * @param symbols
-     * @param volatilityhistorytype
-     * @param intervaltype
-     * @param periodtype
-     * @param period
-     * @param startdate
-     * @param enddate
-     * @param daystoexpire
-     * @param surfacetypeidentifier
-     * @param surfacetypevalue
-     */
-    public void getVolatilityHistory(
-        String[] symbols,
-        char volatilityhistorytype,
-        String intervaltype,
-        String periodtype,
-        int period,
-        String startdate,
-        String enddate,
-        int daystoexpire,
-        String surfacetypeidentifier,
-        int[] surfacetypevalue
-    ) {
-
-    }
-
-    public void getOptionChain(String symbol) {
-
-    }
-
-    public void getBinaryOptionChain(
-        String symbol
-    ) {
-
-    }
-
-    public void getBalancesAndPositions() {
-
-    }
-
-    public void getOrderStatus() {
-
-    }
-
-    public void getHistory(
-        int type
-    ) {
-
-    }
-
-    public void getQuoteDelayed(String symbol) {
-
-    }
-
-    public void getMarketOverview() {
-
-    }
-
-    public void getNews() {
-
-    }
-
-    public void getFullStoryNews(String guid) {
-
-    }
-
-    public void getQuoteNews(String[] symbols) {
-
-    }
+    public PriceHistoryBuilder getPriceHistoryBuilder() { return new PriceHistoryBuilder(config,mapPath.get("PriceHistory")); }
 }
