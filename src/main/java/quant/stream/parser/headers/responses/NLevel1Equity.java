@@ -55,6 +55,6 @@ import quant.stream.parser.headers.SnapshotResponse;
         }
 )
 public class NLevel1Equity extends SnapshotResponse {
-    private static final Short sid = (short)1;
-    private static final byte delimiterRepeat = (byte)(0x3B & 0xFF);
+        private static final Short sid = (short)1;
+        private static final byte delimiterRepeat = (byte)(0x3B & 0xFF);
 }

@@ -15,5 +15,5 @@ import quant.stream.parser.headers.SnapshotResponse;
         }
 )
 public class NGeneralResponse extends SnapshotResponse {
-    private static final Short sid = (short)100;
+        private static final Short sid = (short)100;
 }

@@ -16,5 +16,5 @@ import java.nio.ByteBuffer;
         }
 )
 public class NNewsHistory extends SnapshotResponse {
-    private static final Short sid = (short)28;
+        private static final Short sid = (short)28;
 }

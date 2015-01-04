@@ -16,5 +16,5 @@ import quant.stream.parser.headers.StreamingResponse;
         }
 )
 public class SAccountActivity extends StreamingResponse {
-    private static final Short sid = (short)90;
+        private static final Short sid = (short)90;
 }

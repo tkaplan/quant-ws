@@ -4,10 +4,17 @@ import quant.stream.parser.annotations.Column;
 import quant.stream.parser.annotations.RepeatableColumns;
 import quant.stream.parser.headers.StreamingResponse;
 
+import javax.annotation.Resource;
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.enterprise.concurrent.ManagedExecutorService;
+import javax.inject.Inject;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Created by dev on 12/13/14.
@@ -23,18 +30,18 @@ import java.util.Stack;
 )
 public class SLevel2Nasdaq extends StreamingResponse{
         private static final Short sid = (short)87;
-        public static Map<Object, Object> extract(Map<Object, Object> result) throws UnsupportedEncodingException, InterruptedException {
+        public static Map<Object, Object> extract(Map<Object, Object> result) throws UnsupportedEncodingException, InterruptedException, NamingException, ExecutionException {
+                ManagedExecutorService executor = InitialContext.doLookup("java:comp/DefaultManagedExecutorService");
                 Stack<BookData> askBook = new Stack<>();
                 Stack<BookData> bidBook = new Stack<>();
                 // Parallelize our parsing
                 ExtractData bidBookData = new ExtractData((String)result.get("bidBook"), askBook);
                 ExtractData askBookData = new ExtractData((String)result.get("askBook"), bidBook);
-                Thread bidBookThread = new Thread(bidBookData);
-                Thread askBookThread = new Thread(askBookData);
-                bidBookThread.start();
-                askBookThread.start();
-                bidBookThread.join();
-                askBookThread.join();
+                Future bid = executor.submit(bidBookData);
+                Future ask = executor.submit(askBookData);
+                // Wait for both bid and ask to finish
+                bid.get();
+                ask.get();
                 // Add to our result
                 result.put("bidBook", bidBook);
                 result.put("askBook", askBook);
