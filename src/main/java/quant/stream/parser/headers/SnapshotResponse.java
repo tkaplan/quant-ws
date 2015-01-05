@@ -28,7 +28,7 @@ public class SnapshotResponse {
         Class parseClass = responses.get(sid);
         dis.readShort();
         Map<Object, Object> result = ResponseUtil.parseColumns(parseClass, dis);
-        result.put("ParseID", parseClass.getSimpleName());
+        result.put("ParseID", parseClass);
         dis.readByte();
         return result;
     }

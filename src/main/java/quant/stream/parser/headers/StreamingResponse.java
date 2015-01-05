@@ -28,6 +28,7 @@ public class StreamingResponse {
         short sid = dis.readShort();
         Class parseClass = responses.get(sid);
         Map<Object, Object> result = ResponseUtil.parseColumns(parseClass, dis);
+        result.put("ParseID", parseClass);
         dis.readByte();
         return result;
     }

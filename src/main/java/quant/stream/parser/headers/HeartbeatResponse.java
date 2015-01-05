@@ -22,8 +22,9 @@ public class HeartbeatResponse {
     public static Map parse(DataInputStream dis) throws IOException {
         byte[] heartBeat = new byte[9];
         dis.readFully(heartBeat);
-        Map<String,Boolean> res = new HashMap<>();
+        Map<String,Object> res = new HashMap<>();
         res.put("Heartbeat",true);
+        res.put("ParseID",HeartbeatResponse.class);
         return res;
     }
 }
