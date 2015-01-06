@@ -17,6 +17,7 @@ import quant.http.requests.StreamRequestBuilder;
 import quant.http.requests.XMLRequestBuilder;
 import quant.http.requests.builders.RequestBuilderInterface;
 import quant.stream.manager.StreamManager;
+import quant.stream.parser.headers.HeaderManager;
 import quant.xml.parser.ResponseParser;
 
 import javax.annotation.PostConstruct;
@@ -63,6 +64,7 @@ public class
         builder = new RequestBuilder(config);
         client = HttpClients.createDefault();
         ResponseParser.init();
+        HeaderManager.init();
         // Authenticate logs us in and grabs
         // our stream info
         this.streamManager = new StreamManager(builder.authenticate(client), client, executor);

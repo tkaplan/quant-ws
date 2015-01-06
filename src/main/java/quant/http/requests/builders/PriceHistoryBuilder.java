@@ -62,12 +62,12 @@ public class PriceHistoryBuilder implements RequestBuilderInterface {
         if(extended != null)
             uri.setParameter("extended", extended);
 
-        get = new HttpGet(uri.build());
         RequestConfig requestConfig = RequestConfig.custom()
             .setExpectContinueEnabled(true)
             .setDecompressionEnabled(true)
             .build();
 
+        get = new HttpGet(uri.build());
         get.setConfig(requestConfig);
         return this;
     }

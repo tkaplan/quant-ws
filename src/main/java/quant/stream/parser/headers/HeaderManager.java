@@ -28,10 +28,7 @@ public class HeaderManager {
 
         // Can we handle this exception?
         if(responseClass == null) {
-            for(int i = 0; i < 200; i ++) {
-                System.out.println(dis.read());
-            }
-            throw new Exception("I have no idea how to handle this header: " + header);
+            throw new Exception("I have no idea how to handle this header");
         }
 
         Method method = responseClass.getMethod("parse", DataInputStream.class);
