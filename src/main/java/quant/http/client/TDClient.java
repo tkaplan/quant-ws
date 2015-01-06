@@ -16,6 +16,7 @@ import quant.http.requests.RequestBuilder;
 import quant.http.requests.StreamRequestBuilder;
 import quant.http.requests.XMLRequestBuilder;
 import quant.http.requests.builders.RequestBuilderInterface;
+import quant.stream.iostream.MapObserver;
 import quant.stream.manager.StreamManager;
 import quant.stream.parser.headers.HeaderManager;
 import quant.xml.parser.ResponseParser;
@@ -95,9 +96,20 @@ public class
         streamManager.clear();
     }
 
-    // Returns a stream of only our relevant maps
-    public void getMapStream() {
+    public void registerMapObserver(MapObserver mo) {
+        streamManager.registerMapObserver(mo);
+    }
 
+    public void unregisterMapObserver(MapObserver mo) {
+        streamManager.unregisterMapObserver(mo);
+    }
+
+    public void clearMapObserversForClass(Class clazz) {
+        streamManager.clearMapObserversForClass(clazz);
+    }
+
+    public void clearAllMapObservers() {
+        streamManager.clearAllMapObservers();
     }
 
     // Refresh our stream info
