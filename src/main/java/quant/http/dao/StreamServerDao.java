@@ -98,6 +98,7 @@ public class StreamServerDao {
         RequestConfig requestConfig = RequestConfig.custom()
             .setExpectContinueEnabled(true)
             .setDecompressionEnabled(true)
+            .setRedirectsEnabled(false)
             .build();
 
         String nvpsStr = "";

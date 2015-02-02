@@ -1,15 +1,8 @@
 package quant.http.client;
 
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.xml.sax.SAXException;
 import quant.http.config.TDClientConfig;
 import quant.http.dao.StreamServerDao;
 import quant.http.requests.RequestBuilder;
@@ -17,6 +10,7 @@ import quant.http.requests.StreamRequestBuilder;
 import quant.http.requests.XMLRequestBuilder;
 import quant.http.requests.builders.RequestBuilderInterface;
 import quant.stream.iostream.MapObserver;
+import quant.stream.manager.StatusHolder;
 import quant.stream.manager.StreamManager;
 import quant.stream.parser.headers.HeaderManager;
 import quant.xml.parser.ResponseParser;
@@ -26,15 +20,8 @@ import javax.annotation.Resource;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.concurrent.ManagedExecutorService;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
@@ -84,8 +71,8 @@ public class
         streamManager.start();
     }
 
-    public void updateStreaming(String request) throws Exception {
-        streamManager.update(request);
+    public StatusHolder updateStreaming(String request) throws Exception {
+        return streamManager.update(request);
     }
 
     public void stopStream() throws Exception {
