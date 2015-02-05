@@ -17,6 +17,8 @@ import quant.xml.parser.ResponseParser;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.ejb.ConcurrencyManagement;
+import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.concurrent.ManagedExecutorService;
@@ -28,12 +30,8 @@ import java.util.concurrent.Future;
  * Created by dev on 12/20/14.
  */
 @Startup
-@Singleton(
-    mappedName="TDClient",
-    name="TDClient"
-)
-public class
-    TDClient {
+@Singleton
+public class TDClient {
 
     private CloseableHttpClient client;
     private TDClientConfig config;
@@ -47,16 +45,20 @@ public class
     ManagedExecutorService executor;
 
     @PostConstruct
-    public void startup() throws Exception {
-        config = new TDClientConfig();
-        builder = new RequestBuilder(config);
-        client = HttpClients.createDefault();
-        ResponseParser.init();
-        HeaderManager.init();
-        // Authenticate logs us in and grabs
-        // our stream info
-        this.streamManager = new StreamManager(builder.authenticate(client), client, executor);
-        this.xmlRequestBuilder = new XMLRequestBuilder(config);
+    public void startup() {
+        try {
+            config = new TDClientConfig();
+            builder = new RequestBuilder(config);
+            client = HttpClients.createDefault();
+            ResponseParser.init();
+            HeaderManager.init();
+            // Authenticate logs us in and grabs
+            // our stream info
+            this.streamManager = new StreamManager(builder.authenticate(client), client, executor);
+            this.xmlRequestBuilder = new XMLRequestBuilder(config);
+        } catch(Exception e) {
+
+        }
     }
 
     public XMLRequestBuilder XMLRequestBuilder() {

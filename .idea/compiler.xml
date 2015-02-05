@@ -22,10 +22,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="TDClient" />
+        <module name="bean" />
+        <module name="client" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="bean" target="1.8" />
+      <module name="client" target="1.8" />
       <module name="TDClient" target="1.8" />
     </bytecodeTargetLevel>
   </component>
