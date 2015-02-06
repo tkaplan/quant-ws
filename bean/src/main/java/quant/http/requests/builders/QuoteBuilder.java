@@ -14,7 +14,7 @@ import java.util.*;
 public class QuoteBuilder implements RequestBuilderInterface {
     private URIBuilder uri;
     private HttpGet get;
-    private List<String> symbols;
+    private String symbols;
 
     public QuoteBuilder(TDClientConfig config, String url) {
         URIBuilder uri = new URIBuilder()
@@ -23,18 +23,11 @@ public class QuoteBuilder implements RequestBuilderInterface {
             .setPath(url)
             .setParameter("source", config.get("source"));
 
-        symbols = new LinkedList<>();
-
         this.uri = uri;
     }
 
-    public void addSymbols(String[] symbols) {
-        this.symbols.addAll(Arrays.asList(symbols));
-    }
-
-    public QuoteBuilder addSymbol(String symbol) {
-        this.symbols.add(symbol);
-        return this;
+    public void setSymbols(String symbols) {
+        this.symbols = symbols;
     }
 
     @Override
@@ -48,15 +41,6 @@ public class QuoteBuilder implements RequestBuilderInterface {
     }
 
     public QuoteBuilder build() throws URISyntaxException {
-        String symbols = "";
-        Iterator<String> it = this.symbols.iterator();
-        while(it.hasNext()) {
-            symbols += it.next();
-            if(it.hasNext()) {
-                symbols += ", ";
-            }
-        }
-
         uri.setParameter("symbol",symbols);
         get = new HttpGet(uri.build());
         return this;

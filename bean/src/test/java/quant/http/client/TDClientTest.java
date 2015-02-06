@@ -54,9 +54,7 @@ public class TDClientTest {
     public void quote () {
         XMLRequestBuilder xmlBuilder = client.XMLRequestBuilder();
         QuoteBuilder quoteBuilder = xmlBuilder.getQuoteBuilder();
-        quoteBuilder.addSymbol("adxs")
-                    .addSymbol("nwbo")
-                    .addSymbol("aapl");
+        quoteBuilder.setSymbols("ADXS, NWBO");
         try {
             Future<Map> result = client.execute(quoteBuilder.build());
             Map mapResults = result.get();

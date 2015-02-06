@@ -4,6 +4,7 @@ package quant.rest;
 
 import quant.http.client.TDClient;
 import quant.http.requests.builders.PriceHistoryBuilder;
+import quant.http.requests.builders.QuoteBuilder;
 import quant.http.requests.builders.RequestBuilderInterface;
 
 import javax.naming.InitialContext;
@@ -71,5 +72,19 @@ public class Snapshot {
             .setEndDate(endDate);
 
         return handle(priceHistory);
+    }
+
+    @GET
+    @Path("/quotes")
+    public Response priceHistory(
+        @QueryParam("request-value") String symbols
+    ) {
+        QuoteBuilder quotes = client.
+            XMLRequestBuilder().
+            getQuoteBuilder();
+
+        quotes.setSymbols(symbols);
+
+        return handle(quotes);
     }
 }
