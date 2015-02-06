@@ -85,10 +85,13 @@ public class TDClientTest {
             Map mapResults = result.get();
         } catch (URISyntaxException e) {
             e.printStackTrace();
+            Assert.fail();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Assert.fail();
         } catch (ExecutionException e) {
             e.printStackTrace();
+            Assert.fail();
         }
     }
 }

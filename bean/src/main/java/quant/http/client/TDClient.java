@@ -30,6 +30,7 @@ import java.util.concurrent.Future;
  * Created by dev on 12/20/14.
  */
 @Startup
+@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Singleton
 public class TDClient {
 
