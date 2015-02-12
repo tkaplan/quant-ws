@@ -13,6 +13,10 @@ import quant.stream.iostream.MapObserver;
 import quant.stream.manager.StatusHolder;
 import quant.stream.manager.StreamManager;
 import quant.stream.parser.headers.HeaderManager;
+import quant.stream.parser.headers.responses.SLevel1Equity;
+import quant.stream.parser.headers.responses.SLevel1Option;
+import quant.stream.parser.headers.responses.SLevel2Nasdaq;
+import quant.stream.parser.headers.responses.SLevel2OPNY;
 import quant.xml.parser.ResponseParser;
 
 import javax.annotation.PostConstruct;
@@ -22,6 +26,7 @@ import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.concurrent.ManagedExecutorService;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -41,6 +46,8 @@ public class TDClient {
     private StreamRequestBuilder streamRequestBuilder;
     private StreamServerDao dao;
     private StreamManager streamManager;
+    private Map<String, Class> parseIdMap;
+    private Map<String, String> tIdMap;
 
     @Resource
     ManagedExecutorService executor;
@@ -59,7 +66,45 @@ public class TDClient {
             this.xmlRequestBuilder = new XMLRequestBuilder(config);
         } catch(Exception e) {
 
+        } finally {
+            parseIdMap = new HashMap();
+            parseIdMap.put("QUOTE", SLevel1Equity.class);
+            parseIdMap.put("OPTION", SLevel1Option.class);
+            parseIdMap.put("OPRA", SLevel2OPNY.class);
+            parseIdMap.put("NYSE_BOOK", SLevel2OPNY.class);
+            parseIdMap.put("TOTAL_VIEW", SLevel2Nasdaq.class);
+
+            tIdMap = new HashMap<>();
+
+            // Level 1 Quote
+            tIdMap.put("QUOTE", "0+1+2+3+4" +
+                "+5+6+7+8+9+10+11+12+13+14+" +
+                "15+16+17+18+22+23+24+25+26+" +
+                "27+28+29+30+31+32+33+34+37+38+" +
+                "39+40");
+
+            // Level 1 Option
+            tIdMap.put("OPTION", "0+1+2+3+4+5+6+7+8+9" +
+                "+10+11+12+13+14+15+16+17+19+20+21" +
+                "+22+23+24+25+26+27+28+29+31+32+33+34+35+36");
+
+            // Level 2 Option
+            tIdMap.put("OPRA", "0+1+2");
+
+            // Level 2 NYSE_BOOK
+            tIdMap.put("NYSE_BOOK", "0+1+2");
+
+            // Level 2 NASDAQ
+            tIdMap.put("TOTAL_VIEW", "0+1+2+3");
         }
+    }
+
+    public String getT(String key) {
+        return tIdMap.get(key);
+    }
+
+    public Class getParseIdForString(String key) {
+        return parseIdMap.get(key);
     }
 
     public XMLRequestBuilder XMLRequestBuilder() {

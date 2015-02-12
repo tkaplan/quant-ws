@@ -6,7 +6,7 @@
         id="WebApp_ID" version="3.0">
         <display-name>quant</display-name>
 
-        <!-- Auto scan REST service -->
+        <!-- Auto scan REST services -->
         <context-param>
             <param-name>resteasy.scan</param-name>
             <param-value>true</param-value>

@@ -12,7 +12,6 @@ import javax.naming.NamingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -23,7 +22,6 @@ import java.util.concurrent.Future;
 @Path("/snapshot")
 public class Snapshot {
     private TDClient client = null;
-    private Map blank = new HashMap<>();
     public Snapshot() {
         try {
             client =  InitialContext.doLookup("java:app/client-1.0-SNAPSHOT/TDClient");
