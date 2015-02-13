@@ -1,6 +1,5 @@
 package quant.stream.manager;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -21,6 +20,7 @@ public class StreamManager {
     private volatile StreamServerDao dao;
     private volatile MapStream mapStream;
     private volatile HttpClient client;
+    String cookie = null;
     private volatile HttpRequestBase connection = null;
 
     @Resource
@@ -37,8 +37,9 @@ public class StreamManager {
         dao.newStream();
         connection = dao.getStreamRequest();
         HttpResponse response = client.execute(connection);
-        Header cookieH = response.getFirstHeader("Set-Cookie");
+        cookie = response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
         mapStream = new MapStream(response.getEntity().getContent());
+
         executor.submit(
             () -> {
                 try {
@@ -79,6 +80,7 @@ public class StreamManager {
     private StatusHolder updateRequest(String request) throws Exception {
         dao.setStreamRequest(request);
         HttpRequestBase httpRequest = dao.getStreamRequest();
+        httpRequest.setHeader("Cookie", cookie);
         HttpResponse response = client.execute(httpRequest);
         boolean result = response.getStatusLine().getStatusCode() < 400;
         mapStream = new MapStream(response.getEntity().getContent());

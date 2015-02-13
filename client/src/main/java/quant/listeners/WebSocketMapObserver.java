@@ -6,9 +6,7 @@ import quant.http.client.TDClient;
 import quant.services.ClientCount;
 import quant.stream.iostream.MapObserver;
 
-import javax.ejb.ConcurrencyManagement;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.websocket.RemoteEndpoint;
 import javax.websocket.Session;
 import java.net.URI;
@@ -62,14 +60,14 @@ public class WebSocketMapObserver implements MapObserver {
     private void parseQuery(String request, ClientCount cc) throws URISyntaxException {
         List<NameValuePair> params = URLEncodedUtils.parse(new URI(request), "UTF-8");
         for (NameValuePair param : params) {
-            if(param.getName() == "S") {
+            if(param.getName().equals("S")) {
                 // Get the request type ... could be level 1/2, equities or options
                 refType = param.getValue();
                 chm = cc.getRefType(refType);
                 parseId = streamClient.getParseIdForString(refType);
                 T = streamClient.getT(refType);
                 C = "ADD";
-            } else if(param.getName() == "P") {
+            } else if(param.getName().equals("P")) {
                 // P gives us our symbols or parameters
                 parameters = param.getValue().split("\\s*,\\s*");
             }
@@ -112,7 +110,7 @@ public class WebSocketMapObserver implements MapObserver {
         int length = parameters.length;
         for(int i = 0; i < length; i++) {
             if(i + 1 < length)
-                P += parameters[i] + ", ";
+                P += parameters[i] + "+";
             else
                 P += parameters[i];
         }

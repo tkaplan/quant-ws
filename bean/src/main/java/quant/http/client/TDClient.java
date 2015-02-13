@@ -48,6 +48,7 @@ public class TDClient {
     private StreamManager streamManager;
     private Map<String, Class> parseIdMap;
     private Map<String, String> tIdMap;
+    private boolean isStreaming = false;
 
     @Resource
     ManagedExecutorService executor;
@@ -115,16 +116,20 @@ public class TDClient {
         return streamRequestBuilder;
     }
 
-    public void startStreaming() throws Exception {
-        streamManager.start();
+    public synchronized void startStreaming() throws Exception {
+        if(!isStreaming)
+            streamManager.start();
+        isStreaming = true;
     }
 
     public StatusHolder updateStreaming(String request) throws Exception {
         return streamManager.update(request);
     }
 
-    public void stopStream() throws Exception {
-        streamManager.stop();
+    public synchronized void stopStream() throws Exception {
+        if(isStreaming)
+            streamManager.stop();
+        isStreaming = false;
     }
 
     public void clearStream() throws Exception {
@@ -163,5 +168,9 @@ public class TDClient {
             }
         };
         return executor.submit(task);
+    }
+
+    public boolean isStreaming() {
+        return isStreaming;
     }
 }

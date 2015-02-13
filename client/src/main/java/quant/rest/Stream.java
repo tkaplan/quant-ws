@@ -50,6 +50,6 @@ public class Stream {
 
     @OnClose
     public void myOnClose(CloseReason reason) {
-        System.out.println("Closing a WebSocket du to " + reason.getReasonPhrase());
+        System.out.println("Closing a WebSocket due to: " + reason.getReasonPhrase());
     }
 }

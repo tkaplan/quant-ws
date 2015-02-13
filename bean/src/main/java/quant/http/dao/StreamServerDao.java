@@ -37,7 +37,7 @@ public class StreamServerDao {
     private String scv;
     private TDClientConfig config;
 
-    public StreamServerDao (TDClientConfig config, XMLLoginEntity loginEntity, XMLStreamInfoEntity streamInfoEntity) throws UnsupportedEncodingException {
+    public StreamServerDao (TDClientConfig config, XMLLoginEntity loginEntity, XMLStreamInfoEntity streamInfoEntity) throws UnsupportedEncodingException, UnknownHostException {
         this.config = config;
         this.xmlLoginEntity = loginEntity;
         this.xmlStreamInfoEntity = streamInfoEntity;
@@ -47,7 +47,7 @@ public class StreamServerDao {
         newStream();
     }
 
-    public void setPostEntity(XMLLoginEntity loginEntity, XMLStreamInfoEntity streamInfoEntity) {
+    public void setPostEntity(XMLLoginEntity loginEntity, XMLStreamInfoEntity streamInfoEntity) throws UnknownHostException {
         entity.setAppId(streamInfoEntity.getAppId());
         entity.setAccountId(loginEntity.getAccountId());
         entity.setAcl(streamInfoEntity.getAcl());
@@ -56,7 +56,12 @@ public class StreamServerDao {
         entity.setCompany(loginEntity.getCompany());
         entity.setSegment(loginEntity.getSegment());
         entity.setCddomain(streamInfoEntity.getCdDomainId());
-        entity.setStreamUrl(streamInfoEntity.getStreamerUrl());
+
+        // Get ip address
+        entity.setStreamUrl(InetAddress.
+            getByName(streamInfoEntity.
+                getStreamerUrl()).
+            getHostAddress());
         entity.setTimestamp(streamInfoEntity.getTimestamp());
         entity.setToken(streamInfoEntity.getToken());
         entity.setUsergroup(streamInfoEntity.getUsergroup());
@@ -114,7 +119,7 @@ public class StreamServerDao {
         String request = nvpsStr + scv + streamRequest;
 
         request = URLEncoder.encode(request, "UTF-8");
-        request = "https://" + entity.getStreamUrl() + "/" + request;
+        request = "http://" + entity.getStreamUrl() + "/" + request;
         HttpGet get = new HttpGet(request);
         get.setConfig(requestConfig);
         markOld();
