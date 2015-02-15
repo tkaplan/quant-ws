@@ -8,6 +8,11 @@ public class StatusHolder {
     public StatusHolder() {
 
     }
+
+    public StatusHolder(Status status) {
+        this.status = status;
+    }
+
     public void set(Status status) {
         this.status = status;
     }

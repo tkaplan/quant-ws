@@ -74,6 +74,6 @@ public class StreamParserTest {
             Assert.assertEquals(Status.OK, statusHolder.get());
             return;
         }
-        //Assert.fail();
+        Assert.fail();
     }
 }

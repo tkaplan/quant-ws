@@ -49,11 +49,11 @@ public class WebSocketMapObserver implements MapObserver {
         // Update string request
         updateStringRequest();
 
-        // Update stream
-        update();
-
         // Register ourselves
         streamClient.registerMapObserver(mo);
+
+        // Update stream
+        update();
     }
 
 

@@ -20,7 +20,7 @@ public class StreamManager {
     private volatile StreamServerDao dao;
     private volatile MapStream mapStream;
     private volatile HttpClient client;
-    String cookie = null;
+    private volatile String cookie = null;
     private volatile HttpRequestBase connection = null;
 
     @Resource
@@ -70,47 +70,25 @@ public class StreamManager {
         int count = 3;
         StatusHolder status = null;
         while(count-- > 0 || status == null) {
+            // Should technically block
             status = updateRequest(request);
-            if(status.get() != Status.OK)
+            if(status.get() == Status.OK)
                 break;
         }
         return status;
     }
 
+    // This method should block for a max of 10 seconds until we have
+    // status of our request
     private StatusHolder updateRequest(String request) throws Exception {
         dao.setStreamRequest(request);
         HttpRequestBase httpRequest = dao.getStreamRequest();
         httpRequest.setHeader("Cookie", cookie);
         HttpResponse response = client.execute(httpRequest);
-        boolean result = response.getStatusLine().getStatusCode() < 400;
-        mapStream = new MapStream(response.getEntity().getContent());
-        final CountDownLatch latch = new CountDownLatch(1);
-        StatusHolder statusHolder = new StatusHolder();
-        StatusObserver status = new StatusObserver(latch, statusHolder);
-        mapStream.registerMapObserver(status);
-        // Submit our task
-        executor.submit(
-            () -> {
-                try {
-                    // Start streaming
-                    mapStream.start();
-                } catch (Exception e) {
-                    // Catch and handle any issue with end of stream
-                    // or socket finished.
-                    if (!(e instanceof java.io.EOFException)
-                        &&
-                        !(e instanceof java.net.SocketException)) {
-                        e.printStackTrace();
-                    }
-                }
-                return;
-            }
-        );
-        if(!latch.await(10, TimeUnit.SECONDS)) {
-            statusHolder.set(Status.TIMEOUT);
-        }
         httpRequest.releaseConnection();
-        return statusHolder;
+        if(response.getStatusLine().getStatusCode() < 300)
+            return new StatusHolder(Status.OK);
+        return new StatusHolder(Status.ERROR);
     }
 
     public void clear() throws Exception {

@@ -62,6 +62,7 @@ public class StreamServerDao {
             getByName(streamInfoEntity.
                 getStreamerUrl()).
             getHostAddress());
+        //entity.setStreamUrl(streamInfoEntity.getStreamerUrl());
         entity.setTimestamp(streamInfoEntity.getTimestamp());
         entity.setToken(streamInfoEntity.getToken());
         entity.setUsergroup(streamInfoEntity.getUsergroup());
@@ -86,12 +87,12 @@ public class StreamServerDao {
 
     public void newStream () throws UnsupportedEncodingException {
         streamRequest = "|S=QUOTE&C=SUBS&P=DELL&T=0";
-        scv = "|source=" + config.get("source") + "|control=false";
+        scv =  "|control=false" + "|source=" + config.get("source") + "|version=2.3";
     }
 
     private void markOld () throws UnsupportedEncodingException {
         streamRequest = "";
-        scv = "|source=" + config.get("source") + "|control=true";
+        scv =  "|control=true" + "|source=" + config.get("source") + "|version=2.3";
     }
 
     public void setStreamRequest (String request) {

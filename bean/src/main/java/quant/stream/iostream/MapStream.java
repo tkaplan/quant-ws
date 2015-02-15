@@ -13,21 +13,25 @@ import java.io.DataInputStream;
 import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by dev on 1/2/15.
  */
 public class MapStream {
-    private DataInputStream dis;
-    private boolean interrupt = false;
-    private ConcurrentHashMap<Class, CopyOnWriteArrayList<MapObserver>> observers;
+    private volatile DataInputStream dis;
+    private volatile boolean interrupt = false;
+    private volatile Map<Class, ArrayList<MapObserver>> observers;
+    private volatile AtomicBoolean atomicBoolean;
 
     private ManagedExecutorService executor;
 
     public MapStream (InputStream is) throws IllegalAccessException, NoSuchFieldException, NoSuchMethodException, NamingException {
+        atomicBoolean = new AtomicBoolean();
+
         executor =  InitialContext.doLookup("java:comp/DefaultManagedExecutorService");
         dis = new DataInputStream(is);
-        observers = new ConcurrentHashMap();
+        observers = new HashMap();
 
         // Reflections doesn't have a .getAllTypes method that returns Classes
         Reflections reflections = new Reflections("quant.stream.parser.headers.responses");
@@ -41,7 +45,7 @@ public class MapStream {
         // Grab our observer using class key
         Iterator<Class> it = allClasses.iterator();
         while(it.hasNext()) {
-            observers.put(it.next(), new CopyOnWriteArrayList<>());
+            observers.put(it.next(), new ArrayList<>());
         }
     }
 
@@ -49,14 +53,14 @@ public class MapStream {
      * Clears a particular class of linked list observers
      * @param clazz
      */
-    public void clear(Class clazz) {
+    public synchronized void clear(Class clazz) {
         observers.get(clazz).clear();
     }
 
     /**
      * Clears all observers
      */
-    public void clearAll() {
+    public synchronized void clearAll() {
         Set<Class> classSet = observers.keySet();
         Iterator<Class> it = classSet.iterator();
         while(it.hasNext()) {
@@ -67,14 +71,17 @@ public class MapStream {
     /**
      * One start per map stream instance.
      */
-    public synchronized void start() throws Exception {
+    public void start() throws Exception {
+        if(atomicBoolean.getAndSet(true))
+            return;
         while (!interrupt) {
             Map result = StreamParser.parse(dis);
             // We can just ignore heartbeat response
             if(result.get("ParseID").equals(HeartbeatResponse.class))
                 continue;
+            System.out.println(result);
             // Get a list of all observers for this class type
-            CopyOnWriteArrayList<MapObserver> observerList = observers.get(result.get("ParseID"));
+            ArrayList<MapObserver> observerList = observers.get(result.get("ParseID"));
             // Iterate through the list submit their tasks
             Iterator<MapObserver> it = observerList.iterator();
             while(it.hasNext()) {
@@ -91,22 +98,20 @@ public class MapStream {
         interrupt = true;
     }
 
-    public void registerMapObserver(MapObserver mo) {
-        CopyOnWriteArrayList<MapObserver> observerList = observers.get(mo.getParseID());
-        observerList.add(mo);
+    public synchronized void registerMapObserver(MapObserver mo) {
+        observers.get(mo.getParseID()).add(mo);
     }
 
-    public void unregisterMapObserver(MapObserver mo) {
-        CopyOnWriteArrayList<MapObserver> observerList = observers.get(mo.getParseID());
-        observerList.remove(mo);
+    public synchronized void unregisterMapObserver(MapObserver mo) {
+        observers.get(mo.getParseID()).remove(mo);
     }
 
-    public void clearMapObserversForClass(Class clazz) {
+    public synchronized void clearMapObserversForClass(Class clazz) {
         if(observers.containsKey(clazz))
             observers.get(clazz).clear();
     }
 
-    public void clearAllMapObservers() {
+    public synchronized void clearAllMapObservers() {
         Set<Class> classes = observers.keySet();
         Iterator<Class> it = classes.iterator();
         while(it.hasNext())
