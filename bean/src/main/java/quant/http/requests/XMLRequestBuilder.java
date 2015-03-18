@@ -7,6 +7,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import quant.http.client.TDClient;
 import quant.http.config.TDClientConfig;
 import quant.http.dao.StreamServerDao;
+import quant.http.requests.builders.OptionBuilder;
 import quant.http.requests.builders.PriceHistoryBuilder;
 import quant.xml.parser.ResponseParser;
 import quant.http.requests.builders.QuoteBuilder;
@@ -41,6 +42,10 @@ public class XMLRequestBuilder {
         mapPath.put("News", "/apps/100/NewsManager");
         mapPath.put("FullStoryNews", "/apps/100/FullStoryNews");
         mapPath.put("QuoteNews", "/apps/100/QuoteNews");
+    }
+
+    public OptionBuilder getOptionBuilder() {
+        return new OptionBuilder(config,mapPath.get("OptionChain"));
     }
 
     public QuoteBuilder getQuoteBuilder() {

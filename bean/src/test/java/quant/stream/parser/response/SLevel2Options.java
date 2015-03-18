@@ -1,32 +1,20 @@
 package quant.stream.parser.response;
 
-/**
- * Created by dev on 1/6/15.
- */
-
 import quant.stream.parser.ResponseTest;
-import quant.stream.parser.headers.responses.SLevel2Nasdaq;
-
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-
-import quant.stream.iostream.MapObserver;
-import quant.stream.parser.ResponseTest;
-import quant.stream.parser.headers.responses.SLevel2Nasdaq;
 import quant.stream.parser.headers.responses.SLevel2OPNY;
 
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Created by dev on 1/6/15.
+ * Created by dev on 2/18/15.
  */
 @ResponseTest
-public class SLevel2OPNYObs implements MapObserverTest {
+public class SLevel2Options implements MapObserverTest {
     private final CountDownLatch latch;
     private final CountDownLatch assertLatch;
 
-    public SLevel2OPNYObs(CountDownLatch latch, CountDownLatch assertLatch) {
+    public SLevel2Options(CountDownLatch latch, CountDownLatch assertLatch) {
         this.latch = latch;
         this.assertLatch = assertLatch;
     }
@@ -44,7 +32,7 @@ public class SLevel2OPNYObs implements MapObserverTest {
                 System.out.println("Running SLevel2OPNYObs");
                 // Always assert the latch before
                 // release latch
-                if(!result.get("symbol").equals("IBM"))
+                if(!result.get("symbol").equals("TSN_022015P35"))
                     assertLatch.countDown();
                 if(!result.get("ParseID").equals(SLevel2OPNY.class))
                     assertLatch.countDown();
@@ -55,6 +43,6 @@ public class SLevel2OPNYObs implements MapObserverTest {
 
     @Override
     public String request() {
-        return "S=NYSE_BOOK&C=ADD&P=IBM&T=0+1+2";
+        return "S=OPRA&C=ADD&P=TSN_022015P35&T=0+1+2";
     }
 }

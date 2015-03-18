@@ -3,6 +3,7 @@ package quant.rest;
 
 
 import quant.http.client.TDClient;
+import quant.http.requests.builders.OptionBuilder;
 import quant.http.requests.builders.PriceHistoryBuilder;
 import quant.http.requests.builders.QuoteBuilder;
 import quant.http.requests.builders.RequestBuilderInterface;
@@ -74,7 +75,7 @@ public class Snapshot {
 
     @GET
     @Path("/quotes")
-    public Response priceHistory(
+    public Response quotes(
         @QueryParam("request-value") String symbols
     ) {
         QuoteBuilder quotes = client.
@@ -84,5 +85,21 @@ public class Snapshot {
         quotes.setSymbols(symbols);
 
         return handle(quotes);
+    }
+
+    @GET
+    @Path("/options")
+    public Response optionChain(
+        @QueryParam("request-value") String symbol,
+        @QueryParam("type") String type
+    ) {
+        OptionBuilder options = client.
+            XMLRequestBuilder().
+            getOptionBuilder();
+
+        options.setSymbol(symbol);
+        options.setType(type);
+
+        return handle(options);
     }
 }

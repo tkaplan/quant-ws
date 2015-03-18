@@ -69,7 +69,7 @@ public class StreamParserTest {
         MapObserverTest obs = construct.newInstance(latch, assertLatch);
         client.registerMapObserver(obs);
         StatusHolder statusHolder = client.updateStreaming(obs.request());
-        if(latch.await(10, TimeUnit.SECONDS)) {
+        if(latch.await(20, TimeUnit.SECONDS)) {
             Assert.assertEquals(1L, assertLatch.getCount());
             Assert.assertEquals(Status.OK, statusHolder.get());
             return;
