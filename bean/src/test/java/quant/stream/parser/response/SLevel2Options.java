@@ -29,10 +29,9 @@ public class SLevel2Options implements MapObserverTest {
         return new Runnable() {
             @Override
             public void run() {
-                System.out.println("Running SLevel2OPNYObs");
                 // Always assert the latch before
                 // release latch
-                if(!result.get("symbol").equals("TSN_022015P35"))
+                if(!result.get("symbol").equals("NWBO_012017P5"))
                     assertLatch.countDown();
                 if(!result.get("ParseID").equals(SLevel2OPNY.class))
                     assertLatch.countDown();
@@ -43,6 +42,6 @@ public class SLevel2Options implements MapObserverTest {
 
     @Override
     public String request() {
-        return "S=OPRA&C=ADD&P=TSN_022015P35&T=0+1+2";
+        return "S=OPRA&C=ADD&P=NWBO_012017P5&T=0+1+2";
     }
 }

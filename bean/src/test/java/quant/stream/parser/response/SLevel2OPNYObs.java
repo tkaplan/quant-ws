@@ -5,18 +5,10 @@ package quant.stream.parser.response;
  */
 
 import quant.stream.parser.ResponseTest;
-import quant.stream.parser.headers.responses.SLevel2Nasdaq;
-
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-
-import quant.stream.iostream.MapObserver;
-import quant.stream.parser.ResponseTest;
-import quant.stream.parser.headers.responses.SLevel2Nasdaq;
 import quant.stream.parser.headers.responses.SLevel2OPNY;
 
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by dev on 1/6/15.
@@ -41,7 +33,6 @@ public class SLevel2OPNYObs implements MapObserverTest {
         return new Runnable() {
             @Override
             public void run() {
-                System.out.println("Running SLevel2OPNYObs");
                 // Always assert the latch before
                 // release latch
                 if(!result.get("symbol").equals("IBM"))

@@ -5,7 +5,7 @@ import quant.stream.parser.headers.responses.SLevel1Equity;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-@ResponseTest
+//@ResponseTest
 public class SLevel1Equities implements MapObserverTest {
 
     private final CountDownLatch latch;
@@ -26,13 +26,6 @@ public class SLevel1Equities implements MapObserverTest {
         return new Runnable() {
             @Override
             public void run() {
-                System.out.println("Running SLevel1Equity");
-                System.out.println("##########################");
-                System.out.println("##########################");
-                System.out.println("##########################");
-                System.out.println("##########################");
-
-                System.out.println(result);
                 // Always assert the latch before
                 // release latch
                 if(!result.get("symbol").equals("APPL"))

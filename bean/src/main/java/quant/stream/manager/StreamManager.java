@@ -50,7 +50,6 @@ public class StreamManager {
                         !(e instanceof java.net.SocketException)) {
                         e.printStackTrace();
                     }
-                    System.out.println("Stream stopped successfully!");
                 }
                 return;
             }
@@ -84,11 +83,6 @@ public class StreamManager {
         dao.setStreamRequest(request);
         HttpRequestBase httpRequest = dao.getStreamRequest();
         httpRequest.setHeader("Cookie", cookie);
-        System.out.println("Updating $$$$$$$$$$$$");
-        System.out.println("Updating $$$$$$$$$$$$");
-        System.out.println(httpRequest.getURI());
-        System.out.println("Updating $$$$$$$$$$$$");
-        System.out.println("Updating $$$$$$$$$$$$");
         HttpResponse response = client.execute(httpRequest);
         httpRequest.releaseConnection();
         if(response.getStatusLine().getStatusCode() < 300)

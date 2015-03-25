@@ -79,7 +79,6 @@ public class MapStream {
             // We can just ignore heartbeat response
             if(result.get("ParseID").equals(HeartbeatResponse.class))
                 continue;
-            System.out.println(result);
             // Get a list of all observers for this class type
             ArrayList<MapObserver> observerList = observers.get(result.get("ParseID"));
             // Iterate through the list submit their tasks

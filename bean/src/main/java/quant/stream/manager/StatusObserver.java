@@ -28,7 +28,6 @@ public class StatusObserver implements MapObserver {
         return new Runnable() {
             @Override
             public void run() {
-                System.out.println(result);
                 if((short)result.get("sid") == (short)100
                     &&
                     ((String)result.get("description")).equals("SUCCESS")) {

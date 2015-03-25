@@ -58,7 +58,6 @@ public class TDClientTest {
         try {
             Future<Map> result = client.execute(quoteBuilder.build());
             Map mapResults = result.get();
-            System.out.println(mapResults);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

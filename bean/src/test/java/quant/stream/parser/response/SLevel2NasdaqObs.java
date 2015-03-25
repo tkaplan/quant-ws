@@ -1,6 +1,5 @@
 package quant.stream.parser.response;
 
-import quant.stream.iostream.MapObserver;
 import quant.stream.parser.ResponseTest;
 import quant.stream.parser.headers.responses.SLevel2Nasdaq;
 
@@ -30,7 +29,6 @@ public class SLevel2NasdaqObs implements MapObserverTest {
         return new Runnable() {
             @Override
             public void run() {
-                System.out.println("Running SLevel2NasdaqObs");
                 // Always assert the latch before
                 // release latch
                 if(!result.get((short)0).equals("ADXS>L2"))
