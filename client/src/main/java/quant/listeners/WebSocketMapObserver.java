@@ -1,5 +1,7 @@
 package quant.listeners;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import quant.http.client.TDClient;
@@ -30,8 +32,10 @@ public class WebSocketMapObserver implements MapObserver {
     private String stringRequest = null;
     private String C = "";
     private String T = "";
+    private Gson gson;
 
     public WebSocketMapObserver(String request, Session client, ClientCount cc) throws Exception {
+
         // Get Session client for our websocket
         this.client = client;
         mo = this;
@@ -65,6 +69,12 @@ public class WebSocketMapObserver implements MapObserver {
                 refType = param.getValue();
                 chm = cc.getRefType(refType);
                 parseId = streamClient.getParseIdForString(refType);
+
+                // Set up gson
+                GsonBuilder builder = new GsonBuilder();
+                //builder.registerTypeAdapter(parseId,new Object());
+                gson = builder.create();
+
                 T = streamClient.getT(refType);
                 C = "ADD";
             } else if(param.getName().equals("P")) {
@@ -133,7 +143,9 @@ public class WebSocketMapObserver implements MapObserver {
             public void run() {
                 try {
                     if(client.isOpen()) {
-                        remote.sendText(result.toString());
+                        result.remove("ParseID");
+                        result.put("ParseID", parseId.getSimpleName());
+                        remote.sendText(gson.toJson(result));
                     } else {
                         unregisterAllSymbols();
                         updateStringRequest();

@@ -4,6 +4,7 @@ import quant.stream.parser.annotations.Column;
 import quant.stream.parser.annotations.RepeatableColumns;
 import quant.stream.parser.headers.StreamingResponse;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -52,6 +53,8 @@ public class SLevel2OPNY extends StreamingResponse {
         }
         result.put("bids", bids);
         result.put("asks", asks);
+        result.remove("data");
+        result.remove((short)2);
         return result;
     }
 

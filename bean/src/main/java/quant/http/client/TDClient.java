@@ -47,6 +47,7 @@ public class TDClient {
     private StreamServerDao dao;
     private StreamManager streamManager;
     private Map<String, Class> parseIdMap;
+    private Map<String, Class> dtoMap;
     private Map<String, String> tIdMap;
     private boolean isStreaming = false;
 
